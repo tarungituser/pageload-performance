@@ -1,4 +1,4 @@
-# CMS Page Load Performance
+# Page Load Performance
 
 This project is for getting page load performance metrics using lighthouse and perform validations with expected benchmark with html report generation.
 
