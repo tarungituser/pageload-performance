@@ -1,0 +1,24 @@
+{
+  "name": "lighthouseperformance",
+  "version": "1.0.0",
+  "description": "For calculating page load performance.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine",
+    "preprotractor": "webdriver-manager update --gecko false --versions.chrome==106.0.5249.103 ",
+    "preprotractor2": "webdriver-manager start --standalone",
+    "perftest": "protractor conf.js",
+    "perf-report": "allure generate allure-results --clean -o allure-report || true"
+  },
+  "author": "Tarun Kumar",
+  "license": "ISC",
+  "dependencies": {
+    "allure-commandline": "^2.13.0",
+    "jasmine": "^3.5.0",
+    "jasmine-allure-reporter": "^1.0.2",
+    "jasmine-data-provider": "^2.2.0",
+    "lighthouse": "5.2.0",
+    "protractor": "^5.4.2",
+    "request-promise": "^4.2.4"
+  }
+}

@@ -1,0 +1,65 @@
+pipeline {
+    agent { label 'jenkins_master' }
+
+environment {
+        REPORTPATH = 'C:\\Projects\\MonotypeNonProdPageLoadPerfReports\\'
+        REPORTDISPLAYPATH = '\\NOI-TARUNK-W10\\MonotypeNonProdPageLoadPerfReports\\'
+    }
+
+    stages {
+        stage('Setup') {
+            steps {
+                bat label: '', script: 'npm update'
+            }
+        }
+        stage('Setup test data') {
+            steps {
+                bat label: '', script: 'npm update'
+            }
+        }
+        stage('Performance Tests - Mobile') {
+            steps {
+           catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+            bat '''
+                setlocal 
+                    set DEVICE=mobile
+                    set THROTTLINGMETHOD=simulate
+                    
+                endlocal    
+               '''
+             echo "Stage Mobile Failed as tcs failure rate greater then 0 percentile"
+                }
+            }
+        }
+
+        stage('Performance Tests - Desktop') {
+           
+            steps {
+            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+             bat '''
+                setlocal 
+                    set DEVICE=desktop
+                    set THROTTLINGMETHOD=provided
+                    
+                endlocal    
+               '''
+                echo "Stage Desktop Failed as tcs failure rate greater then 0 percentile"
+                }            
+            }
+        }
+    }
+
+    post {
+        always { 
+            allure([
+	        includeProperties: false,
+        	jdk: '',
+        	reportBuildPolicy: 'ALWAYS',
+        	results: [[path: 'allure-results']]
+            ])
+            emailext body: '''${SCRIPT, template="allure-report.groovy"}''',
+                        subject: "[Jenkins] CMS Page Load Performance Test Execution Summary",
+                        to: '${ENV, var="MAIL_TO"}'
+        }
+    }
+}
